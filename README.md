@@ -24,6 +24,8 @@ it with the supplied cover page.
 
 ```
 # Fetch a zine to generate the print version of
+git clone https://github.com/jvns/zine-formatter.py
+cd zine-formatter
 wget https://jvns.ca/strace-zine-v2.pdf
 python zine-formatter.py \
   --zine strace-zine-v2.pdf \
