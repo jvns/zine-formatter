@@ -1,4 +1,4 @@
-A small script for generating zines suitable for printing on your home printer on US letter paper.
+A small script for formatting zines suitable so that they can be printed on your home printer on US letter paper.
 It uses pdftk/pdfjam/pdfcrop behind the scenes.
 
 ### Requirements
@@ -25,7 +25,7 @@ it with the supplied cover page.
 ```
 # Fetch a zine to generate the print version of
 wget https://jvns.ca/strace-zine-v2.pdf
-python zine-maker.py \
+python zine-formatter.py \
   --zine strace-zine-v2.pdf \
   --pages 16 \
   --view-output strace-zine-view.pdf \
