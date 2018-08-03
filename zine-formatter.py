@@ -9,6 +9,7 @@ def parse_args():
     parser.add_argument('--pages', required=True, type=multiple_of_four)
     parser.add_argument('--print-output', required=True)
     parser.add_argument('--view-output', required=True)
+    parser.add_argument('--size')
     parser.add_argument('--cover')
     return parser.parse_args()
 
@@ -30,7 +31,7 @@ def temp_filename():
     return tempfile.mktemp('.pdf')
 
 
-def make_zine(zine, pages, print_output, view_output, cover=None):
+def make_zine(zine, pages, print_output, view_output, cover=None, size=None):
     if cover is not None:
         inside = temp_filename()
         cover_resized = temp_filename()
@@ -46,12 +47,16 @@ def make_zine(zine, pages, print_output, view_output, cover=None):
         run("pdftk {zine} cat 1-{pages} output {inside}".format(zine=zine, pages=pages, inside=inside))
         zine_step1 = inside
     run(['pdfcrop', '--margin', '14 0 14 0', zine_step1, view_output])
-    run(['pdfjam', '--booklet', 'true', '--landscape', '--suffix', 'book', '--letterpaper',
+    if size is None:
+        size_arg = '--letterpaper'
+    elif size == 'a4':
+        size_arg = '--a4paper'
+    run(['pdfjam', '--booklet', 'true', '--landscape', '--suffix', 'book', size_arg,
     '--signature', '12', '--booklet', 'true', '--scale', '1.0', '--offset', '0cm 0cm',
     '--landscape', view_output, '-o', print_output])
 
 if __name__ == '__main__':
     args = parse_args()
-    make_zine(args.zine, args.pages, args.print_output, args.view_output, cover=args.cover)
+    make_zine(args.zine, args.pages, args.print_output, args.view_output, size=args.size, cover=args.cover)
 
 
