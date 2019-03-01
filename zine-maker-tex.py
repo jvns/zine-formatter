@@ -42,6 +42,10 @@ def run(args):
     print(' '.join(args))
     subprocess.check_call(args)
 
+import os
+
+def temp_filename():
+    return tempfile.NamedTemporaryFile(delete=False, dir='tmp', suffix='.pdf').name
 
 def render(zine=None, pages=None, should_print=None, trim_bottom=None, cover=None, rotate=None,
         papersize=None, filename=None):
@@ -53,17 +57,21 @@ def render(zine=None, pages=None, should_print=None, trim_bottom=None, cover=Non
     with open(tex_file, 'w') as f:
         f.write(latex)
     run(["pdflatex", tex_file])
+    if os.path.basename(filename) != filename:
+        run(["mv", os.path.basename(filename), filename])
 
 if __name__ == '__main__':
     args = parse_args()
 
+    temp_cover = temp_filename()
+
     if args.trim_bottom:
         run(["pdfcrop", "--margins", "0 0 00 800", args.cover, "asdf2.pdf"])
-        run(["pdfjam", "--outfile", "asdf.pdf", "--papersize", "{8.5in,11in}", "asdf2.pdf"])
+        run(["pdfjam", "--outfile", temp_cover, "--papersize", "{8.5in,11in}", "asdf2.pdf"])
     if args.view_output:
         render(zine=args.zine, pages=args.pages,
                 should_print=False, trim_bottom=args.trim_bottom,
-                cover='asdf.pdf',
+                cover=temp_cover,
                 rotate=args.rotate, papersize=args.papersize, filename=args.view_output)
     render(zine=args.zine, pages=args.pages,
             should_print=True, trim_bottom=args.trim_bottom,
