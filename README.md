@@ -4,7 +4,7 @@ It uses pdftk/pdfjam/pdfcrop behind the scenes.
 ### Requirements
 
 ```
-apt-get install pdfjam pdftk texlive-extra-utils 
+apt install pdfjam pdftk texlive-extra-utils 
 ```
 
 Format requirements: the inputs to `--zine` and `--cover` must be 4inchx6inch files. (or at least a
